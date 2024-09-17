@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import "../styles/ProductPiker.scss";
 import ProductModal from "./Modal";
-
 const productsData = [
   {
     id: 77,
@@ -30,6 +31,121 @@ const productsData = [
     },
   },
 ];
+
+const ItemType = "PRODUCT";
+
+const ProductRow = ({ product, index, moveProduct, handleProductClick }) => {
+  const ref = React.useRef(null);
+
+  const [, drop] = useDrop({
+    accept: ItemType,
+    hover(item) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      moveProduct(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemType,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  drag(drop(ref));
+
+  return (
+    <div
+      ref={ref}
+      className="product-row"
+      style={{ opacity: isDragging ? 0.5 : 1, cursor: "move" }}
+    >
+      <i
+        id="pointer"
+        className="fa-solid fa-grip-vertical fa-xl"
+        style={{ color: "#9aaed0" }}
+      ></i>
+      <div className="product-row-index">{index + 1}.</div>
+      <input
+        className="product-input"
+        placeholder="Select Product"
+        value={product.title || ""}
+        onClick={() => handleProductClick(product.id)}
+      />
+    </div>
+  );
+};
+
+const VariantRow = ({
+  variant,
+  index,
+  moveVariant,
+  productId,
+  handelremove,
+}) => {
+  const ref = React.useRef(null);
+
+  const [, drop] = useDrop({
+    accept: `${ItemType}-VARIANT-${productId}`,
+    hover(item) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      moveVariant(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: `${ItemType}-VARIANT-${productId}`,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  drag(drop(ref));
+
+  return (
+    <div
+      ref={ref}
+      className="selected-f-item"
+      style={{ opacity: isDragging ? 0.5 : 1, cursor: "move" }}
+    >
+      <div className="root">
+        <i
+          id="pointer"
+          className="fa-solid fa-grip-vertical fa-xl"
+          style={{ color: "#9aaed0" }}
+        ></i>
+        <div className="product-show">
+          {variant.title} - ${variant.price}
+        </div>
+        <button id="cancel" onClick={() => handelremove(productId, variant.id)}>
+          x
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const ProductPicker = () => {
   const [products, setProducts] = useState([]);
@@ -74,6 +190,32 @@ const ProductPicker = () => {
     }));
   };
 
+  const moveProduct = (dragIndex, hoverIndex) => {
+    const updatedProducts = [...products];
+    [updatedProducts[dragIndex], updatedProducts[hoverIndex]] = [
+      updatedProducts[hoverIndex],
+      updatedProducts[dragIndex],
+    ];
+
+    setProducts(updatedProducts);
+  };
+
+  const moveVariant = (productId, dragIndex, hoverIndex) => {
+    setSelectedProductVariants((prevVariants) => {
+      const productVariants = [...prevVariants[productId]];
+
+      [productVariants[dragIndex], productVariants[hoverIndex]] = [
+        productVariants[hoverIndex],
+        productVariants[dragIndex],
+      ];
+
+      return {
+        ...prevVariants,
+        [productId]: productVariants,
+      };
+    });
+  };
+
   const handleProductSelect = (variants) => {
     if (selectedProductIndex !== null) {
       setSelectedProductVariants((prevState) => ({
@@ -106,6 +248,7 @@ const ProductPicker = () => {
       },
     }));
   };
+
   const handelremove = (productId, variantId) => {
     setSelectedProductVariants((prevVariants) => ({
       ...prevVariants,
@@ -114,6 +257,7 @@ const ProductPicker = () => {
       ),
     }));
   };
+
   const handleRemoveProduct = (productId) => {
     setProducts((prevProducts) =>
       prevProducts.filter((product) => product.id !== productId)
@@ -131,131 +275,131 @@ const ProductPicker = () => {
       return newDiscounts;
     });
   };
+
   return (
     <>
-      <div className="product-picker">
-        <div>
-          {products.map((product, index) => (
-            <React.Fragment key={product.id}>
-              <div className="product-row">
-                <div className="product-row-index">{index + 1}.</div>
-                <input
-                  className="product-input"
-                  placeholder="Select Product"
-                  value={product.title || ""}
-                  onClick={() => handleProductClick(product.id)}
-                />
-                <div className="discount">
-                  {productDiscounts[product.id]?.type ? (
-                    <div className="discount-container">
-                      <input
-                        type="number"
-                        className="discount-amount"
-                        value={productDiscounts[product.id].amount || ""}
-                        onChange={(e) =>
-                          handleDiscountChange(
-                            product.id,
-                            productDiscounts[product.id].type,
-                            e.target.value
-                          )
-                        }
-                      />
-                      <select
-                        className="discount-type"
-                        value={productDiscounts[product.id].type}
-                        onChange={(e) =>
-                          handleDiscountChange(
-                            product.id,
-                            e.target.value,
-                            productDiscounts[product.id].amount
-                          )
-                        }
-                      >
-                        <option value="flat">Flat</option>
-                        <option value="%off">% off</option>
-                      </select>
-                    </div>
-                  ) : (
-                    <button
-                      className="add-discount-button"
-                      onClick={() =>
-                        setProductDiscounts((prev) => ({
-                          ...prev,
-                          [product.id]: { type: "flat", amount: 0 },
-                        }))
-                      }
-                    >
-                      Add Discount
-                    </button>
-                  )}
-                  <div>
-                    <button
-                      id="cancel"
-                      onClick={() => handleRemoveProduct(product.id)}
-                    >
-                      x
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div>
-                {selectedProductVariants[product.id] && (
-                  <div id="flex">
-                    {selectedProductVariants[product.id].length > 0 && (
+      <DndProvider backend={HTML5Backend}>
+        <div className="product-picker">
+          <div className="product-data">
+            {products.map((product, index) => (
+              <React.Fragment key={product.id}>
+                <div className="single-product">
+                  <ProductRow
+                    index={index}
+                    product={product}
+                    moveProduct={moveProduct}
+                    handleProductClick={handleProductClick}
+                  />
+                  <div className="discount">
+                    {productDiscounts[product.id]?.type ? (
+                      <div className="discount-container">
+                        <input
+                          type="number"
+                          className="discount-amount"
+                          value={productDiscounts[product.id].amount || ""}
+                          onChange={(e) =>
+                            handleDiscountChange(
+                              product.id,
+                              productDiscounts[product.id].type,
+                              e.target.value
+                            )
+                          }
+                        />
+                        <select
+                          className="discount-type"
+                          value={productDiscounts[product.id].type}
+                          onChange={(e) =>
+                            handleDiscountChange(
+                              product.id,
+                              e.target.value,
+                              productDiscounts[product.id].amount
+                            )
+                          }
+                        >
+                          <option value="flat">Flat</option>
+                          <option value="%off">% off</option>
+                        </select>
+                      </div>
+                    ) : (
                       <button
-                        className="show"
-                        onClick={() => toggleSelectedProducts(product.id)}
+                        className="add-discount-button"
+                        onClick={() =>
+                          setProductDiscounts((prev) => ({
+                            ...prev,
+                            [product.id]: { type: "flat", amount: 0 },
+                          }))
+                        }
                       >
-                        {showVariants[product.id] ? "Hide" : "Show"} Variants{" "}
-                        <i class="fa-solid fa-chevron-down"></i>
+                        Add Discount
                       </button>
                     )}
+                    <div>
+                      <button
+                        id="cancel"
+                        onClick={() => handleRemoveProduct(product.id)}
+                      >
+                        x
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                {selectedProductVariants[product.id] && (
+                  <div className="varient-root">
+                    {selectedProductVariants[product.id].length > 0 && (
+                      <div className="varient-button">
+                        <button
+                          className="show"
+                          onClick={() => toggleSelectedProducts(product.id)}
+                        >
+                          {showVariants[product.id] ? "Hide" : "Show"} Variants{" "}
+                          <i
+                            id="pointer"
+                            className="fa-solid fa-chevron-down"
+                          ></i>
+                        </button>
+                      </div>
+                    )}
+                    <div className="selected-products">
+                      {showVariants[product.id] &&
+                        selectedProductVariants[product.id] && (
+                          <div>
+                            {selectedProductVariants[product.id].map(
+                              (variant, index) => (
+                                <VariantRow
+                                  key={variant.id}
+                                  index={index}
+                                  variant={variant}
+                                  moveVariant={(dragIndex, hoverIndex) =>
+                                    moveVariant(
+                                      product.id,
+                                      dragIndex,
+                                      hoverIndex
+                                    )
+                                  }
+                                  productId={product.id}
+                                  handelremove={handelremove}
+                                />
+                              )
+                            )}
+                          </div>
+                        )}
+                    </div>
                   </div>
                 )}
-              </div>
-              <div>
-                {showVariants[product.id] &&
-                  selectedProductVariants[product.id] && (
-                    <div className="selected-products">
-                      {selectedProductVariants[product.id].map(
-                        (variant, index) => (
-                          <div
-                            key={variant.id}
-                            className="selected-product-item"
-                          >
-                            <span>{index + 1}.</span>
-                            <div className="product-show">
-                              {variant.title} - ${variant.price}
-                            </div>
-                            <button
-                              id="cancel"
-                              onClick={() =>
-                                handelremove(product.id, variant.id)
-                              }
-                            >
-                              x
-                            </button>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  )}
-              </div>
-            </React.Fragment>
-          ))}
+              </React.Fragment>
+            ))}
+          </div>
+          <button className="add-product-button" onClick={addProductRow}>
+            Add Product
+          </button>
+          {isModalOpen && (
+            <ProductModal
+              onClose={() => setIsModalOpen(false)}
+              onSelect={handleProductSelect}
+            />
+          )}
         </div>
-
-        <button className="add-product-button" onClick={addProductRow}>
-          Add Product
-        </button>
-
-        {isModalOpen && (
-          <ProductModal
-            onClose={() => setIsModalOpen(false)}
-            onSelect={handleProductSelect}
-          />
-        )}
-      </div>
+      </DndProvider>
     </>
   );
 };

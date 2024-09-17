@@ -1,45 +1,27 @@
 .product-picker {
   padding: 50px;
-  width: 800px;
+  width: 650px;
   margin-left: 300px;
 }
 
-.product-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  margin-top: 10px;
-
-
-
-  .product-input {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-
-  .add-discount-button {
-    background-color: #008060;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-  }
+.product-input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+  cursor: pointer;
+  width: 400px;
 }
 
 .add-product-button {
-  background-color: #F6F6F8;
+  background-color: #f6f6f8;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
   margin-top: 10px;
   width: 200px;
-  margin-left: 600px;
-  border: 1px solid #7BBBAC;
-
-
+  margin-left: 408px;
+  border: 1px solid #7bbbac;
 }
 
 .discount-form {
@@ -51,6 +33,7 @@
 
 .add-discount-button {
   margin-left: 10px;
+  height: 35px;
 }
 
 .product-picker .product-row {
@@ -59,12 +42,7 @@
   margin-bottom: 10px;
 }
 
-
-#flex{
-  display: flex;
-  flex-direction: row-reverse;
-}
-.product-show{
+.product-show {
   margin-bottom: 10px;
   display: flex;
   width: 300px;
@@ -72,109 +50,124 @@
   border-radius: 10px;
   border-bottom: 20px;
   border: 1px solid #ccc;
-
-
-   
-
 }
-.show{
+
+.show {
   color: blue;
   background-color: #f6f6f8;
   border-bottom: 1px solid blue;
   border-top: none;
   border-right: none;
   border-left: none;
-  margin-right: 50px;
-
-
+  margin-right: 60px;
 }
-.addiscount{
+.addiscount {
   width: 100px;
   height: 25px;
   border-radius: 2%;
   margin-top: 20px;
   border: 1px solid #ccc;
-
-
-
 }
-.addiscount1{
+.addiscount1 {
   width: 100px;
   height: 30px;
   border-radius: 2%;
   margin-left: 20px;
-
 }
-.selected-product-item{
+.selected-product-item {
   display: flex;
   font: bold;
   margin-left: 90px;
-
 }
-#cancel{
-  background-color:#f6f6f8;
+#cancel {
+  background-color: #f6f6f8;
   border: none;
-  margin-bottom:10px;
   font-size: larger;
-  margin-left: 20px;
-
+  margin-left: 10px;
+  line-height: 1.5;
 }
-.product-show{
+.product-show {
   margin-left: 20px;
-
 }
-.discount-type{
+.discount-type {
   width: 80px;
   height: 30px;
   margin-left: 20px;
   text-align: center;
   border: 1px solid #ccc;
-
 }
-.discount-amount{
+.discount-amount {
   width: 70px;
-  height:27px ;
+  height: 27px;
   text-align: center;
   border: 1px solid #ccc;
-
-
 }
-.discount{
+.discount {
   display: flex;
   text-align: center;
-
 }
 
-// Define your color variables
-$primary-color: #007bff; // Example color, adjust as needed
-$border-color: #007bff;
-$hover-background-color: rgba(0, 123, 255, 0.1);
-$hover-text-color: #007bff;
-$disabled-color: #6c757d;
+// $primary-color:white; 
+// $border-color:green;
+// $hover-background-color:green;
 
-// Button Styles
-.add-discount-button {
-  display: inline-block;
-  padding: 0.375rem 0.75rem;
-  line-height: 1.5;
+
+// .add-discount-button {
+//   display: inline-block;
+//   padding: 0.375rem 0.75rem;
+//   line-height: 1.5;
+//   border-radius: 0.25rem;
+//   border: 1px solid $border-color;
+//   color: $border-color;
+//   background-color: transparent;
+//   text-align: center;
+//   cursor: pointer;
+//   text-decoration: none;
+//   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out,
+//     border-color 0.15s ease-in-out;
+//     background-color: green
+    
+// }
+
+// .add-discount-button-primary {
+//   @extend .add-discount-button;
+//   border-color: $primary-color;
+//   color: $primary-color;
+// }
+.add-discount-button{
+background-color: green;
+color: wheat;
+border: none;
+padding:0.375rem 0.75rem ;  
   border-radius: 0.25rem;
-  border: 1px solid $border-color;
-  color: $border-color;
-  background-color: transparent;
   text-align: center;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-
-}
-
-.add-discount-button-primary {
-  @extend .add-discount-button;
-  border-color: $primary-color;
-  color: $primary-color;
+    background-color: rgb(7, 51, 7)
   
 }
-.hader{
-  color:rgb(139,142,146);
-  border-bottom: 1px solid rgb(139,142,146);
+
+.product-data {
+  display: flex;
+  flex-direction: column;
+}
+.single-product {
+  display: flex;
+}
+.discount-container {
+  display: flex;
+}
+.varient-button {
+  text-align: end;
+}
+.root{
+  display: flex;
+  align-items: baseline;
+  margin-left: 80px;
+}
+.product-row-index{
+  margin-left: 10px;
+}
+#pointer{
+   cursor: pointer;
 }

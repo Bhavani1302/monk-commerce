@@ -13,7 +13,7 @@ function App() {
     <div>
       <ProductPicker />
     </div>
-    </div>  
+    </div> 
   );
 }
 
