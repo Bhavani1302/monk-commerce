@@ -1,0 +1,104 @@
+.product-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal-content {
+    background: white;
+    padding: 20px;
+    width: 500px;
+    max-height: 80%;
+    overflow-y: auto;
+    border-radius: 8px;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .close-button {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+      }
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+    }
+
+    .product-list {
+      .product-title {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 5px;
+        border: 1px solid #ddd;
+
+        img {
+          width: 40px;
+          height: 40px;
+          margin-right: 10px;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 10px;
+        }
+
+        &.selected {
+          background-color: #f0f0f0;
+        }
+      }
+
+      .product-variant {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 5px;
+        cursor: pointer;
+
+        &.selected {
+          background-color: #e0ffe0;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+
+      .cancel-button,
+      .add-button {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .cancel-button {
+        background: #ccc;
+        color: #333;
+      }
+
+      .add-button {
+        background: #008060;
+        color: white;
+      }
+    }
+  }
+}
