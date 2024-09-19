@@ -160,7 +160,8 @@ const ProductPicker = () => {
       .filter((item) => item.id === 77)
       .map((product) => ({
         ...product,
-        title: `select product ${product.id}`,
+
+        title: `select product${product.id}`,
       }));
 
     setProducts(initialProduct);
@@ -177,7 +178,7 @@ const ProductPicker = () => {
         ...prevProducts,
         {
           id: maxId + 1,
-          title: `select product ${maxId + 1}`,
+          title: `select product,${maxId + 1}`,
           variants: [],
           image: {},
         },
@@ -389,15 +390,17 @@ const ProductPicker = () => {
               </React.Fragment>
             ))}
           </div>
-          <button className="add-product-button" onClick={addProductRow}>
-            Add Product
-          </button>
-          {isModalOpen && (
-            <ProductModal
-              onClose={() => setIsModalOpen(false)}
-              onSelect={handleProductSelect}
-            />
-          )}
+          <div className="foot-content">
+            <button className="add-product-button" onClick={addProductRow}>
+              Add Product
+            </button>
+            {isModalOpen && (
+              <ProductModal
+                onClose={() => setIsModalOpen(false)}
+                onSelect={handleProductSelect}
+              />
+            )}
+          </div>
         </div>
       </DndProvider>
     </>
